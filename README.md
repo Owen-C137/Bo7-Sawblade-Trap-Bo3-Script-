@@ -153,7 +153,7 @@ If you want to set up the trap manually:
 - Set `script_int: 1` (must match blade's script_int)
 
 #### 3. Create the Damage Trigger
-- Create a brush and right-click  **trigger  multiple**
+- In the entity browser search for  **trigger_multiple**
 - Set `targetname: "sawblade_trap_damage"`
 - Set `script_int: 1` (must match blade's script_int)
 - Size it to cover the blade's damage area (recommended: 120 units radius around blade)
