@@ -1,0 +1,37 @@
+// ====================================================================
+// SAWBLADE TRAP - SOUND ZONECONFIG ENTRY
+// ====================================================================
+// Add this entry to your map's sound zoneconfig file
+// Location: usermaps\YOUR_MAP_NAME\sound\zoneconfig\YOUR_MAP_NAME.szc
+// ====================================================================
+
+// Add this to the "Sources" array in your .szc file:
+
+{
+ "Type" : "ALIAS",
+ "Name" : "sawblade_trap",
+ "Filename" : "sawblade_trap.csv",
+ "Specs" : [ ] 
+},
+
+// ====================================================================
+// Example
+// ====================================================================
+
+ "Sources" : [
+{
+ "Type" : "ALIAS",
+ "Name" : "sawblade_trap",
+ "Filename" : "sawblade_trap.csv",
+ "Specs" : [ ] 
+},
+{
+ "Type" : "AMBIENT",
+ "Name" : "ambient_mod",
+ "Filename" : "ambient_mod.csv",
+ "Specs" : [
+  "mpl_mod"
+  ]
+},
+]
+}

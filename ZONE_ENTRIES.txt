@@ -1,0 +1,26 @@
+// ====================================================================
+// SAWBLADE TRAP - ZONE FILE ENTRIES
+// ====================================================================
+// Copy and paste these entries into your map's zone file
+// Location: usermaps\YOUR_MAP_NAME\zone_source\YOUR_MAP_NAME.zone
+// ====================================================================
+
+// Sawblade Trap Script Files
+scriptparsetree,scripts/zm/_zm_trap_sawblade.gsc
+scriptparsetree,scripts/zm/_zm_trap_sawblade.gsh
+
+// Sawblade Trap Models
+xmodel,sat_zm_sawblade_trap_set_fxanim
+xmodel,sat_zm_sawblade_trap_lever
+
+// Sawblade Trap Animation Tree
+rawfile,animtrees/zm_sawblade_trap.atr
+
+// Sawblade Trap Animations
+xanim,sat_zm_sawblade_trap_active_loop
+xanim,sat_zm_sawblade_trap_stop
+xanim,sat_zm_sawblade_trap_lever_activate
+xanim,sat_zm_sawblade_trap_lever_deactivate
+
+// Sawblade Trap FX
+fx,_OwensAssets/bo7/sawblade_trap/sawblade_spinning_swirl
