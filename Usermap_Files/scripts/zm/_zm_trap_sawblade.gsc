@@ -10,6 +10,7 @@
 #using scripts\shared\system_shared;
 #using scripts\shared\util_shared;
 
+#using scripts\zm\_zm_audio;
 #using scripts\zm\_zm_score;
 #using scripts\zm\_zm_stats;
 #using scripts\zm\_zm_traps;
@@ -55,45 +56,103 @@ function __main__()
     
     // Setup all sawblade trap levers in the map (before power so we can show "no power" hint)
     trap_levers = GetEntArray("sawblade_trap_lever", "targetname");
+    trap_models = GetEntArray("sawblade_trap_model", "targetname");
+    trap_triggers = GetEntArray("sawblade_trap_damage", "targetname");
     
     if(!IsDefined(trap_levers) || trap_levers.size == 0)
     {
         return;
     }
     
+    // Validate and initialize each trap
     foreach(lever in trap_levers)
     {
-        lever thread init_sawblade_trap();
+        if(!IsDefined(lever.script_int))
+        {
+            continue;
+        }
+        
+        // Find matching blade and trigger with same script_int
+        blade = get_trap_component_by_script_int(trap_models, lever.script_int);
+        trigger = get_trap_component_by_script_int(trap_triggers, lever.script_int);
+        
+        if(!IsDefined(blade) || !IsDefined(trigger))
+        {
+            continue;
+        }
+        
+        // All components found - initialize this trap
+        lever thread init_sawblade_trap(blade, trigger);
     }
+}
+
+function get_trap_component_by_script_int(components, script_int_value)
+{
+    if(!IsDefined(components))
+        return undefined;
+        
+    foreach(component in components)
+    {
+        if(IsDefined(component.script_int) && component.script_int == script_int_value)
+        {
+            return component;
+        }
+    }
+    
+    return undefined;
 }
 
 // ====================================================================
 // TRAP INITIALIZATION
 // ====================================================================
 
-function init_sawblade_trap()
+function init_sawblade_trap(trap_model, damage_trigger)
 {
     // self = lever model
     
-    // Get the trap model linked via script_int
-    trap_model = undefined;
-    if(IsDefined(self.script_int))
+    // If components not passed in, find them by script_int (fallback)
+    if(!IsDefined(trap_model))
     {
-        trap_models = GetEntArray("sawblade_trap_model", "targetname");
-        
-        foreach(model in trap_models)
+        if(IsDefined(self.script_int))
         {
-            if(IsDefined(model.script_int) && model.script_int == self.script_int)
+            trap_models = GetEntArray("sawblade_trap_model", "targetname");
+            
+            foreach(model in trap_models)
             {
-                trap_model = model;
-                break;
+                if(IsDefined(model.script_int) && model.script_int == self.script_int)
+                {
+                    trap_model = model;
+                    break;
+                }
             }
+        }
+        
+        if(!IsDefined(trap_model))
+        {
+            return;
         }
     }
     
-    if(!IsDefined(trap_model))
+    if(!IsDefined(damage_trigger))
     {
-        return;
+        if(IsDefined(self.script_int))
+        {
+            all_triggers = GetEntArray("sawblade_trap_damage", "targetname");
+            
+            foreach(trigger in all_triggers)
+            {
+                if(IsDefined(trigger.script_int) && trigger.script_int == self.script_int)
+                {
+                    damage_trigger = trigger;
+                    break;
+                }
+            }
+        }
+        
+        if(!IsDefined(damage_trigger))
+        {
+            return;
+        }
     }
     
     // Setup animtree for both models
@@ -115,28 +174,6 @@ function init_sawblade_trap()
     {
         self showpart("bone_72975cce9f403ba6"); // Off (no power)
         self thread wait_for_power_then_ready();
-    }
-    
-    // Find the pre-placed damage trigger with matching script_int
-    // Use trigger_multiple (only fires on physical touch, not bullets)
-    damage_trigger = undefined;
-    if(IsDefined(self.script_int))
-    {
-        all_triggers = GetEntArray("sawblade_trap_damage", "targetname");
-        
-        foreach(trigger in all_triggers)
-        {
-            if(IsDefined(trigger.script_int) && trigger.script_int == self.script_int)
-            {
-                damage_trigger = trigger;
-                break;
-            }
-        }
-    }
-    
-    if(!IsDefined(damage_trigger))
-    {
-        return;
     }
     
     // Store references
@@ -171,11 +208,38 @@ function init_sawblade_trap()
 function sawblade_trap_think()
 {
     self endon("kill_trigger");
-    trap_lever = self.stub.trap_lever;
     
     while(true)
     {
+        // Get lever reference from stub each time (CRITICAL for multiple traps)
+        trap_lever = self.stub.trap_lever;
+        
+        // Wait for cooldown to clear before accepting triggers (official pattern)
+        if(trap_lever._trap_cooling_down)
+        {
+            while(trap_lever._trap_cooling_down)
+            {
+                wait(0.1);
+            }
+        }
+        
         self waittill("trigger", player);
+        
+        // Validate player state (official trap pattern)
+        if(player zm_utility::in_revive_trigger())
+        {
+            continue;
+        }
+        
+        if(player.is_drinking > 0)
+        {
+            continue;
+        }
+        
+        if(!zm_utility::is_player_valid(player))
+        {
+            continue;
+        }
         
         // Check if power is on (if required)
         if(SAWBLADE_TRAP_REQUIRES_POWER && !level flag::get("power_on"))
@@ -183,28 +247,21 @@ function sawblade_trap_think()
             continue;
         }
         
-        // Check if trap is in use
-        if(trap_lever._trap_in_use)
+        // Check if trap is in use or cooling down
+        if(trap_lever._trap_in_use || trap_lever._trap_cooling_down)
         {
             continue;
         }
         
-        // Check if trap is cooling down
-        if(trap_lever._trap_cooling_down)
+        // Check if player has enough points (use official function)
+        if(!player zm_score::can_player_purchase(trap_lever.zombie_cost))
         {
-            continue;
-        }
-        
-        // Check if player has enough points
-        if(player.score < trap_lever.zombie_cost)
-        {
-            player zm_utility::play_sound_on_ent("no_purchase");
+            player zm_audio::create_and_play_dialog("general", "outofmoney");
             continue;
         }
         
         // Deduct cost
         player zm_score::minus_to_player_score(trap_lever.zombie_cost);
-        player zm_utility::play_sound_on_ent("purchase");
         
         // Store activating player for stats
         trap_lever.activated_by_player = player;
@@ -220,30 +277,40 @@ function sawblade_trap_update_hint(player)
     
     if(!IsDefined(trap_lever))
     {
-        self SetHintString("");
+        self sethintstring("");
+        return false;
+    }
+    
+    // Hide trigger if player is drinking (official trap pattern)
+    if(player.is_drinking > 0)
+    {
+        self sethintstring("");
         return false;
     }
     
     // Check if power is on (if required)
     if(SAWBLADE_TRAP_REQUIRES_POWER && !level flag::get("power_on"))
     {
-        self SetHintString("^1Power must be activated first");
+        self sethintstring(&"ZOMBIE_NEED_POWER");
         return false;
     }
     
+    // Hide trigger when trap is active
     if(trap_lever._trap_in_use)
     {
-        self SetHintString("^3Trap Active");
+        self sethintstring("");
         return false;
     }
     
+    // Show cooldown message
     if(trap_lever._trap_cooling_down)
     {
-        self SetHintString("^1Trap Cooling Down");
+        self sethintstring(&"ZOMBIE_TRAP_COOLDOWN");
         return false;
     }
     
-    self SetHintString("Hold ^3&&1^7 to activate Sawblade Trap [Cost: ^3" + trap_lever.zombie_cost + "^7]");
+    // Show purchase hint with cost
+    self sethintstring(&"ZOMBIE_BUTTON_BUY_TRAP", trap_lever.zombie_cost);
     return true;
 }
 
