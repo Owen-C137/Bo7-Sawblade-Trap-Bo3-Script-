@@ -120,9 +120,10 @@ Add this `#using` statement at the top:
 #### Adding Multiple Traps
 
 To add multiple independent traps to your map:
+(There is 3 premade prefabs for you to just drag in and use )
 
 1. **Import the prefab** as described above and place the first trap
-2. **Import the prefab again** for the second trap location
+2. **Import the prefab again** for the second trap location and stamp it
 3. **Select all entities of the second trap** (blade, lever, and trigger)
 4. **Open the entity properties** (press `N`)
 5. **Change the `script_int` value** from `1` to `2` for all three entities
