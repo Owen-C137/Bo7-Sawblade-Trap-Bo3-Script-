@@ -1,18 +1,19 @@
-# BO7 Sawblade Trap for Black Ops 3 Zombies
+﻿# BO7 Sawblade Trap for Black Ops 3 Zombies
 
-A fully functional, configurable sawblade trap system inspired by Black Ops 7, ported to Black Ops 3 custom zombies maps.
+A fully functional, configurable sawblade trap system inspired by Black Ops 7, ported to Black Ops 3 custom zombies maps.     
 
 ## Features
 
-- ✅ **Fully animated sawblade trap** with spinning blade and lever activation
-- ✅ **Player knockback system** - launches players away from the blade with configurable force
-- ✅ **Zombie attraction** - uses official BO3 point of interest system (like monkey bombs)
-- ✅ **Instant kill zombies** with gibbing/dismemberment effects
-- ✅ **Wind swirl FX** on spinning blade
-- ✅ **Custom sounds** - lever activation, blade spinning loop, zombie lure audio
-- ✅ **Visual state system** - lever shows green (ready), yellow (active), red (cooldown), gray (no power)
-- ✅ **Power requirement toggle** - can be enabled/disabled
-- ✅ **Fully configurable** - all settings in `.gsh` header file
+-  **Fully animated sawblade trap** with spinning blade and lever activation
+-  **Player knockback system** - launches players away from the blade with configurable force
+-  **Zombie attraction** - uses official BO3 point of interest system (like monkey bombs)
+-  **Instant kill zombies** with gibbing/dismemberment effects
+-  **Wind swirl FX** on spinning blade
+-  **Custom sounds** - lever activation, blade spinning loop, zombie lure audio
+-  **Visual state system** - lever shows green (ready), yellow (active), red (cooldown), gray (no power)
+-  **Power requirement toggle** - can be enabled/disabled
+-  **Fully configurable** - all settings in `.gsh` header file
+-  **Multiple trap support** - place as many traps as you want in your map
 
 ## Installation
 
@@ -55,7 +56,7 @@ Add this entry to the `"Sources"` array:
  "Type" : "ALIAS",
  "Name" : "sawblade_trap",
  "Filename" : "sawblade_trap.csv",
- "Specs" : [ ] 
+ "Specs" : [ ]
 },
 ```
 
@@ -107,7 +108,7 @@ Add this `#using` statement at the top:
 ### Method 1: Use the Prefab (Easiest)
 
 1. Open your map in Radiant
-2. Go to **File → Import → Prefab**
+2. Go to **File  Import  Prefab**
 3. Navigate to: `map_source\_prefabs\_OwensAssets\bo7\sawblade\sawblade_trap.map`
 4. Place the prefab in your map
 5. Done! The prefab includes:
@@ -115,6 +116,24 @@ Add this `#using` statement at the top:
    - Lever model (`script_model` with `targetname: "sawblade_trap_lever"`)
    - Damage trigger (`trigger_multiple` with `targetname: "sawblade_trap_damage"`)
    - All entities have matching `script_int` values to link them together
+
+#### Adding Multiple Traps
+
+To add multiple independent traps to your map:
+
+1. **Import the prefab** as described above and place the first trap
+2. **Import the prefab again** for the second trap location
+3. **Select all entities of the second trap** (blade, lever, and trigger)
+4. **Open the entity properties** (press `N`)
+5. **Change the `script_int` value** from `1` to `2` for all three entities
+6. Repeat for additional traps, using `script_int: 3`, `4`, `5`, etc.
+
+**Each trap must have a unique `script_int` value**, but all three components of each trap (blade, lever, trigger) must share the **same** `script_int` to link them together.
+
+**Example:**
+- **Trap 1:** Blade, lever, and trigger all have `script_int: 1`
+- **Trap 2:** Blade, lever, and trigger all have `script_int: 2`
+- **Trap 3:** Blade, lever, and trigger all have `script_int: 3`
 
 ### Method 2: Manual Setup
 
@@ -133,7 +152,7 @@ If you want to set up the trap manually:
 - Set `script_int: 1` (must match blade's script_int)
 
 #### 3. Create the Damage Trigger
-- Create a brush and right-click → **trigger → multiple**
+- Create a brush and right-click  **trigger  multiple**
 - Set `targetname: "sawblade_trap_damage"`
 - Set `script_int: 1` (must match blade's script_int)
 - Size it to cover the blade's damage area (recommended: 120 units radius around blade)
@@ -206,6 +225,10 @@ All trap settings can be configured in `scripts\zm\_zm_trap_sawblade.gsh`:
 - Make sure trigger is `trigger_multiple` (not `trigger_damage`)
 - If power requirement is on, verify power is activated
 
+### Multiple traps interfere with each other
+- Ensure each trap has a **unique `script_int` value** (Trap 1 = 1, Trap 2 = 2, etc.)
+- Verify all three components of each trap share the same `script_int`
+
 ### FX not showing
 - Verify FX is in zone file: `fx,_OwensAssets/bo7/sawblade_trap/sawblade_spinning_swirl`
 - Check that `.efx` file exists in `share\raw\fx\_OwensAssets\bo7\sawblade_trap\`
@@ -236,6 +259,6 @@ Free to use in your custom zombies maps. Credit is not required.
 
 ---
 
-**Version:** 1.0  
-**Compatible with:** Call of Duty: Black Ops III Mod Tools  
+**Version:** 1.0
+**Compatible with:** Call of Duty: Black Ops III Mod Tools
 **Last Updated:** December 2025
