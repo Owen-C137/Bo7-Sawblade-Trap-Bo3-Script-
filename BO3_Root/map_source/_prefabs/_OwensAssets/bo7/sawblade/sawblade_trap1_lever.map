@@ -1,79 +1,37 @@
 iwmap 4
+"script_startingnumber" 0
+"000_Global" flags  active
+"The Map" flags expanded 
 // entity 0
 {
 guid "{CDD885AD-CEC2-11F0-9F16-8EB03A46188F}"
 "classname" "worldspawn"
 "lutmaterial" "luts_t7_default"
+"fsi" "default"
+"gravity" "800"
+"lightingquality" "1024"
+"lodbias" "default"
+"numOmniShadowSlices" "24"
+"numSpotShadowSlices" "64"
+"samplescale" "1"
+"shadowslices" "96"
+"sky_intensity_factor0" "1"
+"sky_intensity_factor1" "1"
+"skyboxmodel" "skybox_default_day"
+"ssi" "default_day"
+"state_alias_1" "State 1"
+"state_alias_2" "State 2"
+"state_alias_3" "State 3"
+"state_alias_4" "State 4"
+"umbraSmallestHole" "16"
+"umbraSmallestOccluder" "96"
+"umbraTileSize" "2"
+"umbra_prime_depth" "1"
+"vbloom" "none"
+"vcolor" "none"
+"wsi" "default_day"
 }
 // entity 1
-// entity 2
-// entity 3
-// entity 4
-// entity 5
-// entity 6
-// entity 7
-// entity 8
-// entity 9
-// entity 10
-// entity 11
-// entity 12
-// entity 13
-// entity 14
-// entity 15
-// entity 16
-// entity 17
-// entity 18
-// entity 19
-// entity 20
-// entity 21
-// entity 22
-// entity 23
-// entity 24
-// entity 25
-// entity 26
-// entity 27
-// entity 28
-// entity 29
-// entity 30
-// entity 31
-// entity 32
-// entity 33
-// entity 34
-// entity 35
-// entity 36
-// entity 37
-// entity 38
-// entity 39
-// entity 40
-// entity 41
-// entity 42
-// entity 43
-// entity 44
-// entity 45
-// entity 46
-// entity 47
-// entity 48
-// entity 49
-// entity 50
-// entity 51
-// entity 52
-// entity 53
-// entity 54
-// entity 55
-// entity 56
-// entity 57
-// entity 58
-// entity 59
-// entity 60
-// entity 61
-// entity 62
-// entity 63
-// entity 64
-// entity 65
-// entity 66
-// entity 67
-// entity 68
-// entity 69
 {
 guid "{F460C539-CEC1-11F0-9F16-8EB03A46188F}"
 "classname" "script_model"
@@ -82,5 +40,12 @@ guid "{F460C539-CEC1-11F0-9F16-8EB03A46188F}"
 "origin" "0 0 56"
 "script_int" "1"
 "targetname" "sawblade_trap_lever"
+"_color" "1 0 0"
+"client_server" "ServerSide"
+"lightingstate1" "1"
+"lightingstate2" "1"
+"lightingstate3" "1"
+"lightingstate4" "1"
+"modelscale" "1"
+"shadow_casting" "1"
 }
-// entity 70
