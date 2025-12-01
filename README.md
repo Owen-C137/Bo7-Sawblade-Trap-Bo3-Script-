@@ -219,9 +219,12 @@ All trap settings can be configured in `scripts\zm\_zm_trap_sawblade.gsh`:
 
 ## Credits
 
-- **Trap Design:** Inspired by Black Ops 7
-- **Script:** Custom GSC implementation for BO3
-- **Assets:** Custom models, animations, FX, and sounds
+- **Treyarch:** Custom models, animations, FX, and sounds
+- **Activision:** Custom GSC implementation for BO3 (developed with assistance from generative AI)
+
+## Development Note
+
+**No credit to me required in your map** This trap was created primarily through AI assistance, so I dont feel i deserve any credit for it - my contribution was mainly porting the models from BO7 and making sure everything worked correctly. Feel free to use this in your maps however you wish.
 
 ## Support
 
@@ -229,11 +232,10 @@ For issues, questions, or support, check the release thread or contact the autho
 
 ## License
 
-Free to use in your custom zombies maps. Credit is appreciated but not required.
+Free to use in your custom zombies maps. Credit is not required.
 
 ---
 
 **Version:** 1.0  
 **Compatible with:** Call of Duty: Black Ops III Mod Tools  
 **Last Updated:** December 2025
-
