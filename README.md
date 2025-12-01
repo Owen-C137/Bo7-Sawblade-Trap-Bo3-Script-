@@ -245,6 +245,7 @@ All trap settings can be configured in `scripts\zm\_zm_trap_sawblade.gsh`:
 
 - **Treyarch:** Custom models, animations, FX, and sounds
 - **Activision:** Custom GSC implementation for BO3 (developed with assistance from generative AI)
+- **M5_Prodigy:** Testing 
 
 ## Development Note
 
