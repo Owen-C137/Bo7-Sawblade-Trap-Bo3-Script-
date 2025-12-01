@@ -1,38 +1,12 @@
 iwmap 4
-"script_startingnumber" 0
-"000_Global" flags  active
-"The Map" flags expanded 
 // entity 0
 {
-guid "{2F771BDF-CE26-11F0-9F15-E854C3827A1D}"
+guid "{96BE6360-CEC2-11F0-9F16-8EB03A46188F}"
 "classname" "worldspawn"
 "lutmaterial" "luts_t7_default"
-"fsi" "default"
-"gravity" "800"
-"lightingquality" "1024"
-"lodbias" "default"
-"numOmniShadowSlices" "24"
-"numSpotShadowSlices" "64"
-"samplescale" "1"
-"shadowslices" "96"
-"sky_intensity_factor0" "1"
-"sky_intensity_factor1" "1"
-"skyboxmodel" "skybox_default_day"
-"ssi" "default_day"
-"state_alias_1" "State 1"
-"state_alias_2" "State 2"
-"state_alias_3" "State 3"
-"state_alias_4" "State 4"
-"umbraSmallestHole" "16"
-"umbraSmallestOccluder" "96"
-"umbraTileSize" "2"
-"umbra_prime_depth" "1"
-"vbloom" "none"
-"vcolor" "none"
-"wsi" "default_day"
 // brush 0
  {
-  guid "{48BEF5EF-CE3A-11F0-9F15-E854C3827A1D}"
+  guid "{64D2C71E-CEC2-11F0-9F16-8EB03A46188F}"
   curve
   {
   toolFlags;
@@ -40,47 +14,47 @@ guid "{2F771BDF-CE26-11F0-9F15-E854C3827A1D}"
    lightmap_gray
    9 3 16 8
    (
-	v -9.5367432e-007 -11 -1.9073486e-006 t 0 -0 1 1
+	v -9.5367432e-007 -11 -1.9073486e-006 t 0 0 1 1
 	v -9.5367432e-007 -11 32.000015 t 0 -262144 1 7
 	v -9.5367432e-007 -11 64 t 0 -524288 1 7
    )
    (
-	v 12 -11 -1.9073486e-006 t 262144 -0 3 1
+	v 12 -11 -1.9073486e-006 t 262144 0 3 1
 	v 12 -11 32.000015 t 262144 -262144 3 7
 	v 12 -11 64 t 262144 -524288 3 7
    )
    (
-	v 12 0.5 -1.9073486e-006 t 524288 -0 5 1
+	v 12 0.5 -1.9073486e-006 t 524288 0 5 1
 	v 12 0.5 32.000015 t 524288 -262144 5 7
 	v 12 0.5 64 t 524288 -524288 5 7
    )
    (
-	v 12 12 -1.9073486e-006 t 786432 -0 7 1
+	v 12 12 -1.9073486e-006 t 786432 0 7 1
 	v 12 12 32.000015 t 786432 -262144 7 7
 	v 12 12 64 t 786432 -524288 7 7
    )
    (
-	v -9.5367432e-007 12 -1.9073486e-006 t 1048576 -0 9 1
+	v -9.5367432e-007 12 -1.9073486e-006 t 1048576 0 9 1
 	v -9.5367432e-007 12 32.000015 t 1048576 -262144 9 7
 	v -9.5367432e-007 12 64 t 1048576 -524288 9 7
    )
    (
-	v -12.000002 12 -1.9073486e-006 t 1310720 -0 11 1
+	v -12.000002 12 -1.9073486e-006 t 1310720 0 11 1
 	v -12.000002 12 32.000015 t 1310720 -262144 11 7
 	v -12.000002 12 64 t 1310720 -524288 11 7
    )
    (
-	v -12.000002 0.5 -1.9073486e-006 t 1572864 -0 13 1
+	v -12.000002 0.5 -1.9073486e-006 t 1572864 0 13 1
 	v -12.000002 0.5 32.000015 t 1572864 -262144 13 7
 	v -12.000002 0.5 64 t 1572864 -524288 13 7
    )
    (
-	v -12.000002 -11 -1.9073486e-006 t 1835008 -0 15 1
+	v -12.000002 -11 -1.9073486e-006 t 1835008 0 15 1
 	v -12.000002 -11 32.000015 t 1835008 -262144 15 7
 	v -12.000002 -11 64 t 1835008 -524288 15 7
    )
    (
-	v -9.5367432e-007 -11 -1.9073486e-006 t 2097152 -0 17 1
+	v -9.5367432e-007 -11 -1.9073486e-006 t 2097152 0 17 1
 	v -9.5367432e-007 -11 32.000015 t 2097152 -262144 17 7
 	v -9.5367432e-007 -11 64 t 2097152 -524288 17 7
    )
@@ -88,51 +62,85 @@ guid "{2F771BDF-CE26-11F0-9F15-E854C3827A1D}"
  }
 }
 // entity 1
-{
-guid "{16B26E7F-CE26-11F0-9F15-E854C3827A1D}"
-"classname" "script_model"
-"model" "sat_zm_sawblade_trap_set_fxanim"
-"script_int" "1"
-"targetname" "sawblade_trap_model"
-"_color" "1 0 0"
-"client_server" "ServerSide"
-"lightingstate1" "1"
-"lightingstate2" "1"
-"lightingstate3" "1"
-"lightingstate4" "1"
-"modelscale" "1"
-"shadow_casting" "1"
-}
 // entity 2
-{
-guid "{3E31CC9E-CE27-11F0-9F15-E854C3827A1D}"
-"classname" "script_model"
-"angles" "0 180 0"
-"model" "sat_zm_sawblade_trap_lever"
-"origin" "80 -80 56"
-"script_int" "1"
-"targetname" "sawblade_trap_lever"
-"_color" "1 0 0"
-"client_server" "ServerSide"
-"lightingstate1" "1"
-"lightingstate2" "1"
-"lightingstate3" "1"
-"lightingstate4" "1"
-"modelscale" "1"
-"shadow_casting" "1"
-}
 // entity 3
+// entity 4
+// entity 5
+// entity 6
+// entity 7
+// entity 8
+// entity 9
+// entity 10
+// entity 11
+// entity 12
+// entity 13
+// entity 14
+// entity 15
+// entity 16
+// entity 17
+// entity 18
+// entity 19
+// entity 20
+// entity 21
+// entity 22
+// entity 23
+// entity 24
+// entity 25
+// entity 26
+// entity 27
+// entity 28
+// entity 29
+// entity 30
+// entity 31
+// entity 32
+// entity 33
+// entity 34
+// entity 35
+// entity 36
+// entity 37
+// entity 38
+// entity 39
+// entity 40
+// entity 41
+// entity 42
+// entity 43
+// entity 44
+// entity 45
+// entity 46
+// entity 47
+// entity 48
+// entity 49
+// entity 50
+// entity 51
+// entity 52
+// entity 53
+// entity 54
+// entity 55
+// entity 56
+// entity 57
+// entity 58
+// entity 59
+// entity 60
+// entity 61
+// entity 62
+// entity 63
+// entity 64
+// entity 65
+// entity 66
+// entity 67
+// entity 68
+// entity 69
+// entity 70
 {
-guid "{A5ACC952-CE40-11F0-9F15-E854C3827A1D}"
+guid "{64D2C721-CEC2-11F0-9F16-8EB03A46188F}"
 "classname" "trigger_multiple"
 "script_int" "1"
 "targetname" "sawblade_trap_damage"
-"_color" "1 0.3 0.1"
 // brush 0
 {
- guid "{F00B6153-CE40-11F0-9F15-E854C3827A1D}"
+ guid "{64D2C720-CEC2-11F0-9F16-8EB03A46188F}"
  ( 14 48 0 ) ( -18 48 0 ) ( -18 16 0 ) trigger 64 64 16 -50 0 0 lightmap_gray 16384 16384 16 -50 0 0
- ( -15 16 59 ) ( -15 48 59 ) ( 17 48 59 ) trigger 64 64 19 -50 0 0 lightmap_gray 16384 16384 19 -50 0 0
+ ( -15 16 67 ) ( -15 48 67 ) ( 17 48 67 ) trigger 64 64 19 -50 0 0 lightmap_gray 16384 16384 19 -50 0 0
  ( -18 45 59 ) ( 0 48 59 ) ( 0 48 91 ) trigger 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0
  ( -34 34 59 ) ( -18 45 59 ) ( -18 45 91 ) trigger 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0
  ( -45 18 59 ) ( -34 34 59 ) ( -34 34 91 ) trigger 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0
@@ -150,4 +158,12 @@ guid "{A5ACC952-CE40-11F0-9F15-E854C3827A1D}"
  ( 18 45 59 ) ( 34 34 59 ) ( 34 34 91 ) trigger 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0
  ( 0 48 59 ) ( 18 45 59 ) ( 18 45 91 ) trigger 64 64 0 0 0 0 lightmap_gray 16384 16384 0 0 0 0
 }
+}
+// entity 71
+{
+guid "{64D2C724-CEC2-11F0-9F16-8EB03A46188F}"
+"classname" "script_model"
+"model" "sat_zm_sawblade_trap_set_fxanim"
+"script_int" "1"
+"targetname" "sawblade_trap_model"
 }
