@@ -218,6 +218,12 @@ function sawblade_trap_update_hint(player)
 {
     trap_lever = self.stub.trap_lever;
     
+    if(!IsDefined(trap_lever))
+    {
+        self SetHintString("");
+        return false;
+    }
+    
     // Check if power is on (if required)
     if(SAWBLADE_TRAP_REQUIRES_POWER && !level flag::get("power_on"))
     {
@@ -522,6 +528,12 @@ function zombie_damage_sawblade(trap)
     if(IsDefined(trap.activated_by_player) && IsPlayer(trap.activated_by_player))
     {
         trap.activated_by_player zm_stats::increment_challenge_stat("ZOMBIE_HUNTER_KILL_TRAP");
+    }
+    
+    // Notify challenge system of trap kill (if challenge system exists)
+    if(IsDefined(level.challenge_active) && level.challenge_active)
+    {
+        level notify("trap_kill");
     }
     
     // Kill the zombie with sawblade death animation
