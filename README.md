@@ -2,21 +2,6 @@
 
 A fully functional, configurable sawblade trap system inspired by Black Ops 7, ported to Black Ops 3 custom zombies maps.     
 
-**Note: If when you add the trap to your map and when you load in its not showing the hint for the trap lever, You need to switch to use the triggr_use version.**
-
-In the trigger_use version (fix if hintstrings dont show in the unitrigger version)
-is a new 
-
-GSC and new set of lever prefabs, all you need to do is replace the currnet:
-
-- map_source\_prefabs\_OwensAssets\bo7\sawblade\sawblade_trap1_lever.map
-- map_source\_prefabs\_OwensAssets\bo7\sawblade\sawblade_trap2_lever.map
-- map_source\_prefabs\_OwensAssets\bo7\sawblade\sawblade_trap3_lever.map
-- usermaps\your_usermap\scripts\zm\_zm_trap_sawblade.gsc
-
-with the ones in the triggr_use version. thats it 
-
-
 ## Features
 
 -  **Fully animated sawblade trap** with spinning blade and lever activation
