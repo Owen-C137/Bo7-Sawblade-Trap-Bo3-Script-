@@ -54,35 +54,36 @@ function __main__()
     // Register FX effects
     level._effect["sawblade_spinning_swirl"] = "_OwensAssets/bo7/sawblade_trap/sawblade_spinning_swirl";
     
-    // Setup all sawblade trap levers in the map (before power so we can show "no power" hint)
-    trap_levers = GetEntArray("sawblade_trap_lever", "targetname");
-    trap_models = GetEntArray("sawblade_trap_model", "targetname");
-    trap_triggers = GetEntArray("sawblade_trap_damage", "targetname");
+    // Setup all sawblade trap triggers in the map (before power so we can show "no power" hint)
+    trap_triggers = GetEntArray("sawblade_trap_lever", "targetname");
     
-    if(!IsDefined(trap_levers) || trap_levers.size == 0)
+    if(!IsDefined(trap_triggers) || trap_triggers.size == 0)
     {
         return;
     }
     
-    // Validate and initialize each trap
-    foreach(lever in trap_levers)
+    // Initialize each trap trigger
+    foreach(use_trigger in trap_triggers)
     {
-        if(!IsDefined(lever.script_int))
+        if(!IsDefined(use_trigger.script_int))
         {
             continue;
         }
         
-        // Find matching blade and trigger with same script_int
-        blade = get_trap_component_by_script_int(trap_models, lever.script_int);
-        trigger = get_trap_component_by_script_int(trap_triggers, lever.script_int);
+        // Find matching blade model and damage trigger with same script_int
+        blade_models = GetEntArray("sawblade_trap_model", "targetname");
+        damage_triggers = GetEntArray("sawblade_trap_damage", "targetname");
         
-        if(!IsDefined(blade) || !IsDefined(trigger))
+        blade = get_trap_component_by_script_int(blade_models, use_trigger.script_int);
+        damage_trigger = get_trap_component_by_script_int(damage_triggers, use_trigger.script_int);
+        
+        if(!IsDefined(blade) || !IsDefined(damage_trigger))
         {
             continue;
         }
         
         // All components found - initialize this trap
-        lever thread init_sawblade_trap(blade, trigger);
+        use_trigger thread init_sawblade_trap(blade, damage_trigger);
     }
 }
 
@@ -108,7 +109,7 @@ function get_trap_component_by_script_int(components, script_int_value)
 
 function init_sawblade_trap(trap_model, damage_trigger)
 {
-    // self = lever model
+    // self = trigger_use entity
     
     // If components not passed in, find them by script_int (fallback)
     if(!IsDefined(trap_model))
@@ -155,30 +156,46 @@ function init_sawblade_trap(trap_model, damage_trigger)
         }
     }
     
-    // Setup animtree for both models
+    // Setup animtree for blade model
     trap_model useanimtree(#animtree);
-    self useanimtree(#animtree);
     
-    // Initialize lever bones - hide all first
-    self hidepart("bone_72975cce9f403ba6"); // Off (no power)
-    self hidepart("bone_a10d86d9130ff7c6"); // Ready/Green
-    self hidepart("bone_5e8e68bd438d320b"); // Active/Yellow
-    self hidepart("bone_75d6d5ce0fa69abc"); // Cooldown/Red
-    
-    // Show correct state based on power requirement
-    if(!SAWBLADE_TRAP_REQUIRES_POWER || level flag::get("power_on"))
+    // Find lever model if it exists (search for script_model with same targetname)
+    lever_model = undefined;
+    lever_models = GetEntArray("sawblade_trap_lever", "targetname");
+    foreach(lever in lever_models)
     {
-        self showpart("bone_a10d86d9130ff7c6"); // Ready/Green
-    }
-    else
-    {
-        self showpart("bone_72975cce9f403ba6"); // Off (no power)
-        self thread wait_for_power_then_ready();
+        // Filter for script_model only (not trigger_use)
+        if(lever.classname == "script_model" && IsDefined(lever.script_int) && lever.script_int == self.script_int)
+        {
+            lever_model = lever;
+            lever useanimtree(#animtree);
+            
+            // Initialize lever bones if model supports them
+            if(IsDefined(lever.model) && lever.model != "")
+            {
+                lever hidepart("bone_72975cce9f403ba6"); // Off (no power)
+                lever hidepart("bone_a10d86d9130ff7c6"); // Ready/Green
+                lever hidepart("bone_5e8e68bd438d320b"); // Active/Yellow
+                lever hidepart("bone_75d6d5ce0fa69abc"); // Cooldown/Red
+                
+                // Show correct state based on power requirement
+                if(!SAWBLADE_TRAP_REQUIRES_POWER || level flag::get("power_on"))
+                {
+                    lever showpart("bone_a10d86d9130ff7c6"); // Ready/Green
+                }
+                else
+                {
+                    lever showpart("bone_72975cce9f403ba6"); // Off (no power)
+                    lever thread wait_for_power_then_ready();
+                }
+            }
+            break;
+        }
     }
     
-    // Store references
+    // Store references on trigger
     self.trap_model = trap_model;
-    self.lever_model = self;
+    self.lever_model = lever_model;
     self.damage_trigger = damage_trigger;
     self._trap_in_use = false;
     self._trap_cooling_down = false;
@@ -186,43 +203,28 @@ function init_sawblade_trap(trap_model, damage_trigger)
     self._trap_duration = SAWBLADE_TRAP_DURATION;
     self._trap_cooldown_time = SAWBLADE_TRAP_COOLDOWN;
     
-    // Create unitrigger on the lever for player interaction
-    unitrigger_stub = SpawnStruct();
-    unitrigger_stub.origin = self.origin;
-    unitrigger_stub.angles = self.angles;
-    unitrigger_stub.script_unitrigger_type = "unitrigger_radius_use";
-    unitrigger_stub.radius = SAWBLADE_TRAP_USE_RADIUS;
-    unitrigger_stub.height = SAWBLADE_TRAP_USE_HEIGHT;
-    unitrigger_stub.cursor_hint = "HINT_NOICON";
-    unitrigger_stub.require_look_at = false;
-    unitrigger_stub.trap_lever = self;
-    unitrigger_stub.prompt_and_visibility_func = &sawblade_trap_update_hint;
+    // Set trigger as usable
+    self SetCursorHint("HINT_NOICON");
+    self UseTriggerRequireLookAt();
     
-    zm_unitrigger::register_static_unitrigger(unitrigger_stub, &sawblade_trap_think);
+    // Start trigger think loop
+    self thread sawblade_trap_think();
 }
 
 // ====================================================================
-// UNITRIGGER SYSTEM
+// TRIGGER_USE SYSTEM
 // ====================================================================
 
 function sawblade_trap_think()
 {
-    self endon("kill_trigger");
+    self endon("death");
     
     while(true)
     {
-        // Get lever reference from stub each time (CRITICAL for multiple traps)
-        trap_lever = self.stub.trap_lever;
+        // Update hint string
+        self sawblade_trap_update_hint();
         
-        // Wait for cooldown to clear before accepting triggers (official pattern)
-        if(trap_lever._trap_cooling_down)
-        {
-            while(trap_lever._trap_cooling_down)
-            {
-                wait(0.1);
-            }
-        }
-        
+        // Wait for player interaction
         self waittill("trigger", player);
         
         // Validate player state (official trap pattern)
@@ -248,71 +250,54 @@ function sawblade_trap_think()
         }
         
         // Check if trap is in use or cooling down
-        if(trap_lever._trap_in_use || trap_lever._trap_cooling_down)
+        if(self._trap_in_use || self._trap_cooling_down)
         {
             continue;
         }
         
         // Check if player has enough points (use official function)
-        if(!player zm_score::can_player_purchase(trap_lever.zombie_cost))
+        if(!player zm_score::can_player_purchase(self.zombie_cost))
         {
             player zm_audio::create_and_play_dialog("general", "outofmoney");
             continue;
         }
         
         // Deduct cost
-        player zm_score::minus_to_player_score(trap_lever.zombie_cost);
+        player zm_score::minus_to_player_score(self.zombie_cost);
         
         // Store activating player for stats
-        trap_lever.activated_by_player = player;
+        self.activated_by_player = player;
         
         // Activate trap
-        trap_lever thread trap_activate_sawblade();
+        self thread trap_activate_sawblade();
     }
 }
 
-function sawblade_trap_update_hint(player)
+function sawblade_trap_update_hint()
 {
-    // CRITICAL: Get trap_lever reference from stub (stored during init)
-    if(!IsDefined(self.stub) || !IsDefined(self.stub.trap_lever))
-    {
-        self SetHintString("");
-        return false;
-    }
-    
-    trap_lever = self.stub.trap_lever;
-    
-    // Hide trigger if player is drinking (official trap pattern)
-    if(player.is_drinking > 0)
-    {
-        self SetHintString("");
-        return false;
-    }
-    
     // Check if power is on (if required)
     if(SAWBLADE_TRAP_REQUIRES_POWER && !level flag::get("power_on"))
     {
-        self SetHintString("^1Power must be activated first");
-        return false;
+        self sethintstring("^1Power must be activated first");
+        return;
     }
     
     // Hide trigger when trap is active
-    if(trap_lever._trap_in_use)
+    if(self._trap_in_use)
     {
-        self SetHintString("");
-        return false;
+        self sethintstring("");
+        return;
     }
     
     // Show cooldown message
-    if(trap_lever._trap_cooling_down)
+    if(self._trap_cooling_down)
     {
-        self SetHintString("^1Trap Cooling Down");
-        return false;
+        self sethintstring("^1Trap Cooling Down");
+        return;
     }
     
-    // Show purchase hint with cost (plain text instead of localized string)
-    self SetHintString("Hold ^3&&1^7 to activate Sawblade Trap [Cost: ^3" + trap_lever.zombie_cost + "^7]");
-    return true;
+    // Show purchase hint with cost
+    self sethintstring("Hold ^3&&1^7 to activate Sawblade Trap [Cost: ^3" + self.zombie_cost + "^7]");
 }
 
 // ====================================================================
@@ -454,9 +439,13 @@ function trap_activate_sawblade()
     // Play ready sound
     if(IsDefined(lever.lever_model))
     {
-        PlaySoundAtPosition("zmb_trap_ready", lever.lever_model.origin);
+        playsoundatposition("zmb_trap_ready", lever.lever_model.origin);
     }
 }
+
+// ====================================================================
+// POWER WAIT (optional)
+// ====================================================================
 
 function wait_for_power_then_ready()
 {
@@ -613,16 +602,16 @@ function zombie_sawblade_death(trap)
     self endon("death");
     
     // Play zombie death sound
-    PlaySoundAtPosition("sawblade_zmb_death", self.origin);
+    playsoundatposition("sawblade_zmb_death", self.origin);
     
     // Gib/dismember the zombie for sawblade effect (head, arms, legs)
     if(!(IsDefined(self.no_gib) && self.no_gib))
     {
         gibserverutils::gibhead(self);
+        gibserverutils::gibleftarm(self);
+        gibserverutils::gibrightarm(self);
+        gibserverutils::giblegs(self);
     }
-    gibserverutils::gibleftarm(self);
-    gibserverutils::gibrightarm(self);
-    gibserverutils::giblegs(self);
     
     // Deal fatal damage
     self DoDamage(self.health + 666, self.origin, trap, trap, "MOD_UNKNOWN");

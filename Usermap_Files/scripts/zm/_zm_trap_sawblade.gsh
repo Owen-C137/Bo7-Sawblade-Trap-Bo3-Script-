@@ -17,12 +17,6 @@
 #define SAWBLADE_TRAP_MODEL                 "sat_zm_sawblade_trap_set_fxanim"
 #define SAWBLADE_TRAP_LEVER_MODEL           "sat_zm_sawblade_trap_lever"
 
-// Trigger settings
-#define SAWBLADE_TRAP_DAMAGE_RADIUS         120         // Damage detection radius
-#define SAWBLADE_TRAP_DAMAGE_HEIGHT         100         // Damage detection height
-#define SAWBLADE_TRAP_USE_RADIUS            64          // Unitrigger activation radius
-#define SAWBLADE_TRAP_USE_HEIGHT            80          // Unitrigger activation height
-
 // Player knockback settings
 #define SAWBLADE_TRAP_KNOCKBACK_HORIZONTAL  400         // Horizontal push force
 #define SAWBLADE_TRAP_KNOCKBACK_VERTICAL    200         // Upward launch force
