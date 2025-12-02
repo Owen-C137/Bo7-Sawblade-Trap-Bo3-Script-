@@ -192,12 +192,6 @@ All trap settings can be configured in `scripts\zm\_zm_trap_sawblade.gsh`:
 #define SAWBLADE_TRAP_ATTRACT_PRIORITY      10000   // Attraction strength (10000 = monkey bomb level)
 ```
 
-### Interaction Settings
-```gsc
-#define SAWBLADE_TRAP_USE_RADIUS            64      // How close to stand to activate (~1.6 meters)
-#define SAWBLADE_TRAP_USE_HEIGHT            80      // Vertical activation range
-```
-
 ## How It Works
 
 1. **Player activates trap** by pressing the use key near the lever
