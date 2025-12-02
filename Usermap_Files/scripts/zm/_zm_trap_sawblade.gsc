@@ -273,44 +273,45 @@ function sawblade_trap_think()
 
 function sawblade_trap_update_hint(player)
 {
-    trap_lever = self.stub.trap_lever;
-    
-    if(!IsDefined(trap_lever))
+    // CRITICAL: Get trap_lever reference from stub (stored during init)
+    if(!IsDefined(self.stub) || !IsDefined(self.stub.trap_lever))
     {
-        self sethintstring("");
+        self SetHintString("");
         return false;
     }
+    
+    trap_lever = self.stub.trap_lever;
     
     // Hide trigger if player is drinking (official trap pattern)
     if(player.is_drinking > 0)
     {
-        self sethintstring("");
+        self SetHintString("");
         return false;
     }
     
     // Check if power is on (if required)
     if(SAWBLADE_TRAP_REQUIRES_POWER && !level flag::get("power_on"))
     {
-        self sethintstring(&"ZOMBIE_NEED_POWER");
+        self SetHintString("^1Power must be activated first");
         return false;
     }
     
     // Hide trigger when trap is active
     if(trap_lever._trap_in_use)
     {
-        self sethintstring("");
+        self SetHintString("");
         return false;
     }
     
     // Show cooldown message
     if(trap_lever._trap_cooling_down)
     {
-        self sethintstring(&"ZOMBIE_TRAP_COOLDOWN");
+        self SetHintString("^1Trap Cooling Down");
         return false;
     }
     
-    // Show purchase hint with cost
-    self sethintstring(&"ZOMBIE_BUTTON_BUY_TRAP", trap_lever.zombie_cost);
+    // Show purchase hint with cost (plain text instead of localized string)
+    self SetHintString("Hold ^3&&1^7 to activate Sawblade Trap [Cost: ^3" + trap_lever.zombie_cost + "^7]");
     return true;
 }
 
