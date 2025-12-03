@@ -205,7 +205,9 @@ function init_sawblade_trap(trap_model, damage_trigger)
     
     // Set trigger as usable
     self SetCursorHint("HINT_NOICON");
-    self UseTriggerRequireLookAt();
+    // UseTriggerRequireLookAt() only works on trigger_use entities
+    // If your Radiant entities are trigger_use, uncomment this line:
+    // self UseTriggerRequireLookAt();
     
     // Start trigger think loop
     self thread sawblade_trap_think();
